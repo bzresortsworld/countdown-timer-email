@@ -1,16 +1,12 @@
 // File: api/countdown.js
 
-import { createCanvas, registerFont } from 'canvas';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
+const { createCanvas, registerFont } = require('canvas');
+const path = require('path');
+const fs = require('fs');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Try to register Commissioner font, fallback to system font if not found
+// Register Commissioner font if available
 try {
-  const fontPath = path.join(__dirname, 'fonts', 'Commissioner-Regular.ttf');
+  const fontPath = path.join(__dirname, '..', 'fonts', 'Commissioner-Regular.ttf');
   if (fs.existsSync(fontPath)) {
     registerFont(fontPath, { family: 'Commissioner' });
   }
@@ -18,7 +14,7 @@ try {
   console.warn('Commissioner font not available, falling back to default.');
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const {
     to,
     format = 'HH:MM:SS',
@@ -82,4 +78,4 @@ export default async function handler(req, res) {
   res.setHeader('Expires', '0');
 
   canvas.createPNGStream().pipe(res);
-}
+};
